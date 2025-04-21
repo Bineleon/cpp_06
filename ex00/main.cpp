@@ -1,0 +1,28 @@
+#include "ScalarConverter.hpp"
+#include <iomanip>
+
+void printHeader(const std::string& str)
+{
+	int size = 50;
+	int totalPad = size - str.size();
+	(totalPad < 0) ? totalPad = 0 : totalPad;
+	int lPad = totalPad / 2;
+	int rPad = totalPad - lPad;
+
+	std::cout << std::endl << SMGREEN;
+	std::cout << std::setfill('=') << std::setw(size) << "" << std::endl;
+	std::cout << std::setfill(' ') << std::setw(lPad + str.size()) << str << std::setw(rPad) << "" << std::endl;
+	std::cout << std::setfill('=') << std::setw(size) << "" << std::endl;
+	std::cout << RESET << std::endl;
+}
+
+int main(int ac, char **av)
+{
+    if (ac != 2)
+    {
+        std::cerr << RED << "Error: please follow this format : <exe_name> <string_to_represent>" << RESET << std::endl;
+        return 1;
+    }
+    ScalarConverter::convert(av[1]);
+    return 0;
+}

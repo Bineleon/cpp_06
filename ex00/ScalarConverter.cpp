@@ -23,11 +23,26 @@ ScalarConverter::~ScalarConverter(void)
 	std::cout << "ScalarConverter destructor called" << std::endl;
 }
 
+// check literal types
+
 bool isChar(std::string literal)
 {
+	std::string nonDisplay = "ntrbfva0\'\"\\";
+
+	if (literal.length() == 1 && !isdigit(literal.front()))
+	return true;
 	if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
 		return true;
-	if (literal.length() == 4 && )
+	if (literal.length() == 2 && literal.front() == '\\')
+	{
+		if (nonDisplay.find(literal[1]) != std::string::npos)
+			return true;
+	}
+	if (literal.length() == 4 && literal.front() == '\'' && literal.back() == '\'' && literal[1] == '\\')
+	{
+		if (nonDisplay.find(literal[2]) != std::string::npos)
+			return true;
+	}
 	return false;
 }
 
@@ -109,6 +124,20 @@ bool isDouble(std::string literal)
 	return pointFound;
 }
 
+const char *isPseudoLiteral(std::string literal)
+{
+	if (literal == "nan" || literal == "nanf"
+		|| literal == "+inff" || literal == "-inff"
+		|| literal == "+inf" || literal == "-inf")
+		return literal.c_str();
+	return NULL;
+}
+
+// convert types
+
+
+
+
 void ScalarConverter::convert(std::string literal)
 {
 	if (literal.empty())
@@ -117,6 +146,12 @@ void ScalarConverter::convert(std::string literal)
 		return;
 	}
 
+	if (isChar(literal))
+		std::cout << "IS CHAR\n";
+	else
+	{
+		std::cout << "NOT CHAR\n";
+	}
 	if (isFloat(literal))
 		std::cout << "IS FLOAT\n";
 	else

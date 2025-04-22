@@ -23,6 +23,7 @@ int main(int ac, char **av)
         std::cerr << RED << "Error: please follow this format : <exe_name> <string_to_represent>" << RESET << std::endl;
         return 1;
     }
+
     ScalarConverter::convert(av[1]);
     return 0;
 }

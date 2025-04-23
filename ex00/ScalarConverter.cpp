@@ -138,6 +138,7 @@ const char *isPseudoLiteral(std::string literal)
 
 
 
+
 void ScalarConverter::convert(std::string literal)
 {
 	if (literal.empty())

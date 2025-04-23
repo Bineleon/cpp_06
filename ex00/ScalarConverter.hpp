@@ -16,6 +16,23 @@ class ScalarConverter
 		~ScalarConverter(void);
 
 };
+typedef void (*functPtr)(void);
+
+typedef enum e_type
+{
+	CHAR,
+	INT,
+	FLOAT,
+	DOUBLE,
+	PSEUDO_L
+}          t_type;
+
+typedef struct s_literal
+{
+	t_type      type;
+	std::string str;
+	functPtr    function;
+}              t_literal;
 
 # define RESET "\033[0m"
 # define SMRED "\033[0;31m"

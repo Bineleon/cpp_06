@@ -25,7 +25,18 @@ ScalarConverter::~ScalarConverter(void)
 
 // find literal types
 
-std::string isChar(std::string literal)
+bool isChar(const std::string& literal)
+{
+    std::string str;
+
+	if (literal.length() == 1 && !isdigit(literal.front()))
+        return true;
+    if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
+        return true;
+    return false;
+}
+
+std::string extractChar(const std::string& literal)
 {
     std::string str;
 
@@ -33,8 +44,6 @@ std::string isChar(std::string literal)
         str = literal;
     if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
         str = literal[1];
-	if (str.empty())
-	    return "NULL";
     return str;
 }
 
@@ -45,7 +54,7 @@ bool isSign(char c)
 	return false;
 }
 
-bool isInt(std::string literal)
+bool isInt(const std::string& literal)
 {
 	size_t start = 0;
 	long long ll;
@@ -65,7 +74,7 @@ bool isInt(std::string literal)
 	return true;
 }
 
-bool checkLiteralBody(size_t start, std::string literal, size_t len, bool *pointFound)
+bool checkLiteralBody(size_t start, const std::string& literal, size_t len, bool *pointFound)
 {
 	for (size_t i = start; i < len; i++)
 	{
@@ -82,7 +91,7 @@ bool checkLiteralBody(size_t start, std::string literal, size_t len, bool *point
 	return true;
 }
 
-bool isFloat(std::string literal)
+bool isFloat(const std::string& literal)
 {
 	bool pointFound = false;
 	size_t start = 0;
@@ -102,7 +111,7 @@ bool isFloat(std::string literal)
 	return pointFound;
 }
 
-bool isDouble(std::string literal)
+bool isDouble(const std::string& literal)
 {
 	bool pointFound = false;
 	size_t start = 0;
@@ -120,14 +129,14 @@ bool isDouble(std::string literal)
 	return pointFound;
 }
 
-bool isPseudoFLiteral(std::string literal)
+bool isPseudoFLiteral(const std::string& literal)
 {
 	if (literal == "nanf" || literal == "+inff" || literal == "-inff")
 		return true;
 	return false;
 }
 
-bool isPseudoDLiteral(std::string literal)
+bool isPseudoDLiteral(const std::string& literal)
 {
 	if (literal == "nan" || literal == "+inf" || literal == "-inf")
 		return true;
@@ -161,7 +170,7 @@ std::string intToChar(int i)
 void displayConv(char c, int i, float f, double d, bool of)
 {
     std::cout << "char: ";
-    if (c)
+    if (isprint(c))
         std::cout << c << std::endl;
     else if (!of)
         std::cout << intToChar(i) << std::endl;
@@ -177,7 +186,7 @@ void displayConv(char c, int i, float f, double d, bool of)
     std::cout << "double: " << d << std::endl;
 }
 
-void displayPseudoL(std::string literal)
+void displayPseudoL(const std::string& literal)
 {
     std::string c;
     std::string i;
@@ -194,7 +203,7 @@ void displayPseudoL(std::string literal)
     std::cout << "double: " << d << std::endl;
 }
 
-void convertChar(std::string literal)
+void convertChar(const std::string& literal)
 {
     char c = literal.front();
     int i = static_cast<int>(c);
@@ -204,7 +213,7 @@ void convertChar(std::string literal)
     displayConv(c, i, f, d, false);
 }
 
-void convertInt(std::string literal)
+void convertInt(const std::string& literal)
 {
 	int i = atoi(literal.c_str());
 	float f = static_cast<float>(i);
@@ -213,7 +222,7 @@ void convertInt(std::string literal)
 	displayConv(0, i, f ,d, false);
 }
 
-void convertFloat(std::string literal)
+void convertFloat(const std::string& literal)
 {
     int i;
 	float f;
@@ -224,13 +233,13 @@ void convertFloat(std::string literal)
     d = static_cast<double>(f);
     oflow = false;
 
-    if (static_cast<long long>(f) > INT_MAX)
+    if (f > static_cast<float>(INT_MAX) || f < static_cast<float>(INT_MIN))
         oflow = true;
     i = f;
 	displayConv(0, i, f ,d, oflow);
 }
 
-void convertDouble(std::string literal)
+void convertDouble(const std::string& literal)
 {
 	int i;
 	double d;
@@ -241,23 +250,26 @@ void convertDouble(std::string literal)
 	f = static_cast<float>(d);
     oflow = false;
 
-    if (static_cast<long long>(f) > INT_MAX)
-        oflow = true;
+    if (d > static_cast<float>(INT_MAX) || d < static_cast<float>(INT_MIN))
+    oflow = true;
     i = d;
 	displayConv(0, i, f ,d, oflow);
 }
 
-void ScalarConverter::convert(std::string literal)
+void ScalarConverter::convert(const std::string& literal)
 {
     if (isPseudoDLiteral(literal) || isPseudoFLiteral(literal))
+    {
         displayPseudoL(literal);
-	if (isChar(literal) != "NULL")
-		convertChar(isChar(literal));
-	if (isFloat(literal))
+        return;
+    }
+	if (isChar(literal))
+		convertChar(extractChar(literal));
+	else if (isFloat(literal))
 		convertFloat(literal);
-	if (isDouble(literal))
+	else if (isDouble(literal))
 		convertDouble(literal);
-	if (isInt(literal))
+	else if (isInt(literal))
 		convertInt(literal);
     else
         std::cout << "Please enter a valid number to convert" << std::endl;

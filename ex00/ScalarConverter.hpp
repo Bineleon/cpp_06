@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cctype>
 #include <climits>
+#include <iomanip>
+#include <string>
 
 class ScalarConverter
 {
@@ -16,7 +18,7 @@ class ScalarConverter
 		~ScalarConverter(void);
 
 };
-typedef void (*functPtr)(void);
+typedef void (*functPtr)(std::string literal);
 
 typedef enum e_type
 {
@@ -24,7 +26,7 @@ typedef enum e_type
 	INT,
 	FLOAT,
 	DOUBLE,
-	PSEUDO_L
+    NONE
 }          t_type;
 
 typedef struct s_literal

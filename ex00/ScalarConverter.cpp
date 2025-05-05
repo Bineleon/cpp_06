@@ -36,15 +36,15 @@ bool isChar(const std::string& literal)
     return false;
 }
 
-std::string extractChar(const std::string& literal)
+char extractChar(const std::string& literal)
 {
-    std::string str;
+    char charLiteral;
 
 	if (literal.length() == 1 && !isdigit(literal.front()))
-        str = literal;
+        charLiteral = literal[0];
     if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
-        str = literal[1];
-    return str;
+        charLiteral = literal[1];
+    return charLiteral;
 }
 
 bool isSign(char c)
@@ -145,11 +145,6 @@ bool isPseudoDLiteral(const std::string& literal)
 
 // convert literal types
 
-// char: Non displayable
-// int: 0
-// float: 0.0f
-// double: 0.0
-
 std::string intToChar(int i)
 {
     char c;
@@ -205,7 +200,7 @@ void displayPseudoL(const std::string& literal)
 
 void convertChar(const std::string& literal)
 {
-    char c = literal.front();
+    char c = extractChar(literal);
     int i = static_cast<int>(c);
     float f = static_cast<float>(i);
 	double d = static_cast<double>(i);
@@ -256,6 +251,25 @@ void convertDouble(const std::string& literal)
 	displayConv(0, i, f ,d, oflow);
 }
 
+functPtr getConvertor(const std::string &literal)
+{
+    const t_literal literals[] =
+    {
+		{isChar, convertChar},
+		{isInt, convertInt},
+		{isFloat, convertFloat},
+		{isDouble, convertDouble}
+	};
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (literals[i].detectType(literal))
+            return literals[i].convert;
+    }
+
+    throw InvalidLiteralException();
+}
+
 void ScalarConverter::convert(const std::string& literal)
 {
     if (isPseudoDLiteral(literal) || isPseudoFLiteral(literal))
@@ -263,14 +277,13 @@ void ScalarConverter::convert(const std::string& literal)
         displayPseudoL(literal);
         return;
     }
-	if (isChar(literal))
-		convertChar(extractChar(literal));
-	else if (isFloat(literal))
-		convertFloat(literal);
-	else if (isDouble(literal))
-		convertDouble(literal);
-	else if (isInt(literal))
-		convertInt(literal);
-    else
-        std::cout << "Please enter a valid number to convert" << std::endl;
+    try
+    {
+        functPtr func = getConvertor(literal);
+        func(literal);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << RED << e.what() << RESET << std::endl;
+    }
 }

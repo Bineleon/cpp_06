@@ -6,6 +6,7 @@
 #include <climits>
 #include <iomanip>
 #include <string>
+#include "InvalidLiteralException.hpp"
 
 class ScalarConverter
 {
@@ -18,23 +19,24 @@ class ScalarConverter
 		~ScalarConverter(void);
 
 };
-typedef void (*functPtr)(std::string literal);
-
-typedef enum e_type
-{
-	CHAR,
-	INT,
-	FLOAT,
-	DOUBLE,
-    NONE
-}          t_type;
+typedef void (*functPtr)(const std::string & literal);
+typedef bool (*detectPtr)(const std::string & literal);
 
 typedef struct s_literal
 {
-	t_type      type;
-	std::string str;
-	functPtr    function;
+    detectPtr    detectType;
+    functPtr    convert;
 }              t_literal;
+
+// typedef enum e_type
+// {
+// 	CHAR,
+// 	INT,
+// 	FLOAT,
+// 	DOUBLE,
+//     NONE
+// }          t_type;
+
 
 # define RESET "\033[0m"
 # define SMRED "\033[0;31m"

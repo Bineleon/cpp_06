@@ -2,12 +2,12 @@
 
 ScalarConverter::ScalarConverter(void)
 {
-	std::cout << "ScalarConverter default constructor called" << std::endl;
+	std::cout << "ScalarConverter default constructor not allowed for non instantiable class" << std::endl;
 }
 
 ScalarConverter::ScalarConverter(const ScalarConverter& src)
 {
-	std::cout << "ScalarConverter copy constructor called" << std::endl;
+	std::cout << "ScalarConverter copy constructor not allowed for non instantiable class" << std::endl;
 	*this = src;
 }
 

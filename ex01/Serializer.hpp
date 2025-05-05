@@ -3,11 +3,7 @@
 
 #include <iostream>
 #include <cstdint>
-
-typedef struct Data
-{
-    uintptr_t usignedInt;
-};
+#include "Data.hpp"
 
 class Serializer
 {

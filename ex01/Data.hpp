@@ -3,7 +3,10 @@
 
 #include <iostream>
 
-
+struct Data
+{
+    std::string str;
+};
 
 # define RESET "\033[0m"
 # define SMRED "\033[0;31m"

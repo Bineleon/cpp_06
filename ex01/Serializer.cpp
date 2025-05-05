@@ -2,19 +2,19 @@
 
 Serializer::Serializer(void)
 {
-    std::cout << "Serializer default constructor called" << std::endl;
+    std::cout << "Serializer default constructor not allowed for non instantiable class" << std::endl;
 }
 
 Serializer::Serializer(const Serializer& src)
 {
-    std::cout << "Serializer copy constructor called" << std::endl;
+    std::cout << "Serializer copy constructor not allowed for non instantiable class" << std::endl;
     *this = src;
 }
 
 Serializer& Serializer::operator=(const Serializer& rhs)
 {
-    std::cout << "Serializer copy assignment operator called" << std::endl;
-        // copy attributs here
+    std::cout << "Serializer copy assignment operator not allowed for non instantiable class" << std::endl;
+    (void) rhs;
     return *this;
 }
 

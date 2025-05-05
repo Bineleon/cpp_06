@@ -15,7 +15,7 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& rhs)
 {
 	std::cout << "ScalarConverter copy assignment operator not allowed for non instantiable class" << std::endl;
 	(void) rhs;
-	return *this;
+	return;
 }
 
 ScalarConverter::~ScalarConverter(void)

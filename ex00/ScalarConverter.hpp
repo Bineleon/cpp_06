@@ -22,11 +22,11 @@ class ScalarConverter
 typedef void (*functPtr)(const std::string & literal);
 typedef bool (*detectPtr)(const std::string & literal);
 
-typedef struct s_literal
+struct t_literal
 {
     detectPtr    detectType;
     functPtr    convert;
-}              t_literal;
+};
 
 // typedef enum e_type
 // {

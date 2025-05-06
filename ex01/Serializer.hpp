@@ -2,7 +2,9 @@
 #define SERIALIZER_HPP
 
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
+#include <stdlib.h>
+#include <cstdlib>
 #include "Data.hpp"
 
 class Serializer

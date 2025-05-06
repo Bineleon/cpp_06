@@ -29,9 +29,9 @@ bool isChar(const std::string& literal)
 {
     std::string str;
 
-	if (literal.length() == 1 && !isdigit(literal.front()))
+	if (literal.length() == 1 && !isdigit(literal[0]))
         return true;
-    if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
+    if (literal.length() == 3 && literal[0] == '\'' && literal[literal.length() - 1] == '\'')
         return true;
     return false;
 }
@@ -40,9 +40,9 @@ char extractChar(const std::string& literal)
 {
     char charLiteral;
 
-	if (literal.length() == 1 && !isdigit(literal.front()))
+	if (literal.length() == 1 && !isdigit(literal[0]))
         charLiteral = literal[0];
-    if (literal.length() == 3 && literal.front() == '\'' && literal.back() == '\'')
+    if (literal.length() == 3 && literal[0] == '\'' && literal[literal.length() - 1] == '\'')
         charLiteral = literal[1];
     return charLiteral;
 }
@@ -57,9 +57,9 @@ bool isSign(char c)
 bool isInt(const std::string& literal)
 {
 	size_t start = 0;
-	long long ll;
+	long l;
 
-	if (isSign(literal.front()))
+	if (isSign(literal[0]))
 		start++;
 	if (start == literal.length())
 		return false;
@@ -68,8 +68,8 @@ bool isInt(const std::string& literal)
 		if (!isdigit(literal[i]))
 			return false;
 	}
-	ll = std::atoll(literal.c_str());
-	if (ll > INT_MAX || ll < INT_MIN)
+	l = std::strtol(literal.c_str(), NULL, 10);
+	if (l > INT_MAX || l < INT_MIN)
 		return false;
 	return true;
 }
@@ -96,13 +96,13 @@ bool isFloat(const std::string& literal)
 	bool pointFound = false;
 	size_t start = 0;
 
-	if (literal.back() != 'f')
+	if (literal[literal.length() - 1] != 'f')
 		return false;
 	if (literal == "nanf" || literal == "+inff" || literal == "-inff")
 		return true;
-	if (!isdigit(literal.front()) && literal.front() != '.' && !isSign(literal.front()))
+	if (!isdigit(literal[0]) && literal[0] != '.' && !isSign(literal[0]))
 		return false;
-	if (isSign(literal.front()))
+	if (isSign(literal[0]))
 		start++;
 	if (start == literal.length())
 		return false;
@@ -118,9 +118,9 @@ bool isDouble(const std::string& literal)
 
 	if (literal == "nan" || literal == "+inf" || literal == "-inf")
 		return true;
-	if (!isdigit(literal.front()) && literal.front() != '.' && !isSign(literal.front()))
+	if (!isdigit(literal[0]) && literal[0] != '.' && !isSign(literal[0]))
 		return false;
-	if (isSign(literal.front()))
+	if (isSign(literal[0]))
 		start++;
 	if (start == literal.length())
 		return false;
@@ -189,7 +189,7 @@ void displayPseudoL(const std::string& literal)
     std::string d = literal;
 
     if (isPseudoFLiteral(literal))
-        d.pop_back();
+	d.erase (d.size()-1);
     else
        f.push_back('f');
     std::cout << "char: Impossible" << std::endl;
@@ -224,7 +224,7 @@ void convertFloat(const std::string& literal)
     double d;
     bool oflow;
 
-    f = std::stof(literal, NULL);
+    f = static_cast<double>(std::strtod(literal.c_str(), NULL));
     d = static_cast<double>(f);
     oflow = false;
 
@@ -241,7 +241,7 @@ void convertDouble(const std::string& literal)
 	float f;
     bool oflow;
 
-    d = std::stod(literal, NULL);
+    d = std::strtod(literal.c_str(), NULL);
 	f = static_cast<float>(d);
     oflow = false;
 

@@ -6,6 +6,8 @@
 #include <climits>
 #include <iomanip>
 #include <string>
+#include <stdint.h>
+#include <cstdlib>
 #include "InvalidLiteralException.hpp"
 
 class ScalarConverter
@@ -27,15 +29,6 @@ struct t_literal
     detectPtr    detectType;
     functPtr    convert;
 };
-
-// typedef enum e_type
-// {
-// 	CHAR,
-// 	INT,
-// 	FLOAT,
-// 	DOUBLE,
-//     NONE
-// }          t_type;
 
 
 # define RESET "\033[0m"
